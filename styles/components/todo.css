@@ -1,0 +1,70 @@
+.todo-section {
+  margin-block: 81px;
+}
+
+.todo {
+  max-width: 690px;
+  margin-inline: auto;
+}
+
+.todo__title {
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 58px;
+  font-size: 48px;
+}
+
+.todo__actions {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  margin-bottom: 60px;
+}
+
+.todo__form {
+  display: flex;
+  column-gap: 27px;
+}
+
+.todo__filter {
+  display: flex;
+  justify-content: space-between;
+}
+
+.todo__filter.is-visible {
+  display: none;
+}
+
+.todo__filter-button,
+.todo__filter-count {
+  font-size: 20px;
+  color: var(--color-grey-1);
+}
+
+.todo__filter-button {
+  background-color: unset;
+  border: none;
+
+  &.is-active {
+    color: var(--color-dark-alt);
+  }
+
+  &:not(:last-child) {
+    border-right: 2px solid var(--color-grey-1);
+  }
+}
+.todo__empty {
+  display: flex;
+}
+
+.todo__empty-image {
+  margin-left: -200px;
+}
+
+.todo__empty-description {
+  font-style: italic;
+  font-size: var(--font-size-24);
+  white-space: nowrap;
+  margin-top: 160px;
+  margin-left: -115px;
+}

@@ -1,0 +1,26 @@
+.field {
+  width: 100%;
+}
+
+.field__input,
+.field__input::placeholder {
+  font-size: var(--font-size);
+}
+
+.field__input {
+  width: 100%;
+  height: var(--input-height);
+  font-size: var(--font-size-24);
+  border-radius: var(--border-radius);
+  padding-left: 26px;
+  border: none;
+  box-shadow: var(--box-shadow);
+
+  &:focus {
+    outline: 1px solid var(--color-dark-alt);
+  }
+
+  &:placeholder {
+    color: var(--color-grey-2);
+  }
+}

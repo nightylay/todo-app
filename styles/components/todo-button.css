@@ -1,0 +1,17 @@
+.todo__form-button {
+  display: inline-flex;
+  column-gap: 6px;
+  color: var(--color-white);
+  background-color: var(--color-dark);
+  font-size: var(--font-size-24);
+  padding: 15px 30px;
+  min-width: 143px;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--border-radius);
+
+  &:hover {
+    background-color: var(--color-dark-alt);
+    transition: var(--transition-duration) ease;
+  }
+}

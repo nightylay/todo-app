@@ -1,0 +1,23 @@
+:root {
+  --color-dark: #000;
+  --color-dark-alt: #333333;
+
+  --color-grey-1: #6a7282;
+  --color-grey-2: #a9a9a9;
+
+  --color-white: #fff;
+  --color-white-alt: #f3f4f6;
+
+  --box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+
+  --input-height: 60px;
+
+  --font-family: 'Lato', sans-serif;
+
+  --font-size-24: 24px;
+  --font-size-20: 20px;
+
+  --border-radius: 12px;
+
+  --transition-duration: 0.2s;
+}
