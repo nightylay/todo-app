@@ -29,10 +29,10 @@
 .todo__filter {
   display: flex;
   justify-content: space-between;
-}
-
-.todo__filter.is-visible {
-  display: none;
+  margin-bottom: 23px;
+  &.is-visible {
+    display: none;
+  }
 }
 
 .todo__filter-button,
@@ -45,6 +45,10 @@
   background-color: unset;
   border: none;
 
+  &:hover {
+    color: var(--color-dark-alt);
+  }
+
   &.is-active {
     color: var(--color-dark-alt);
   }
@@ -53,8 +57,19 @@
     border-right: 2px solid var(--color-grey-1);
   }
 }
+
+.todo__list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 30px;
+}
+
 .todo__empty {
   display: flex;
+
+  &.is-visible {
+    display: none;
+  }
 }
 
 .todo__empty-image {

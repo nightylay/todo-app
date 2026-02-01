@@ -20,6 +20,10 @@
 
   &:checked {
     background-color: var(--color-dark);
+    & + .todo-item__label {
+      text-decoration: line-through;
+      color: var(--color-grey-1);
+    }
   }
 
   &:not(:checked) {
