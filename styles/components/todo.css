@@ -30,7 +30,7 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 23px;
-  &.is-visible {
+  &:not(.is-visible) {
     display: none;
   }
 }
@@ -67,7 +67,7 @@
 .todo__empty {
   display: flex;
 
-  &.is-visible {
+  &:not(.is-visible) {
     display: none;
   }
 }

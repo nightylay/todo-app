@@ -8,7 +8,13 @@ export const initTodo = () => {
     searchInput: '[data-js-todo-search-input]',
     todoFilter: '[data-js-todo-filter]',
     todoList: '[data-js-todo-list]',
-    todoEmpty: '[data-js-todo-empty]',
+    emptyScreen: '[data-js-todo-empty]',
+    taskCheckbox: '[data-js-todo-checkbox]',
+    taskLabel: '[data-js-todo-task-label]',
+    taskInput: '[data-js-todo-task-input]',
+    taskItem: '[data-js-todo-task-item]',
+    editButton: '[data-js-todo-edit-button]',
+    removeButton: '[data-js-todo-remove-button]',
   }
 
   const stateClasses = {
@@ -16,35 +22,39 @@ export const initTodo = () => {
     isActive: 'is-active'
   }
 
-  const newTaskFormElement = document.querySelector(selectors.newTaskForm)
-  const newTaskInputElement = newTaskFormElement.querySelector(selectors.newTaskInput)
+  const createTaskFormElement = document.querySelector(selectors.newTaskForm)
+  const createTaskInputElement = createTaskFormElement.querySelector(selectors.newTaskInput)
   const searchTaskFormElement = document.querySelector(selectors.searchTaskForm)
   const searchInputElement = searchTaskFormElement.querySelector(selectors.searchTaskForm)
-  const todoFilterElement = document.querySelector(selectors.todoFilter)
+  const filterElement = document.querySelector(selectors.todoFilter)
   const todoListElement = document.querySelector(selectors.todoList)
-  const todoEmptyElement = document.querySelector(selectors.todoEmpty)
+  const emptyScreenElement = document.querySelector(selectors.emptyScreen)
 
-  const todosArr = getItemLocalStorage('todos') || []
+  let tasksArr = getItemLocalStorage() || []
 
-  newTaskFormElement.addEventListener('submit', (e) => {
+  createTaskFormElement.addEventListener('submit', (e) => {
     e.preventDefault()
-    const newTaskInputValue = newTaskInputElement.value
-    if (newTaskInputValue.trim()) {
-      todosArr.push(newTaskInputValue)
-      setItemLocalStorage(todosArr)
-      renderNewTask()
+    const createTaskInputValue = createTaskInputElement.value.trim()
+    if (createTaskInputValue) {
+      const taskItem = {
+        id: crypto.randomUUID(),
+        text: createTaskInputValue,
+        isCompleted: false,
+      }
+      tasksArr.push(taskItem)
+      setItemLocalStorage(tasksArr)
+      addTask()
+      createTaskInputElement.value = ''
     }
-    newTaskInputElement.value = ''
   })
 
-  const renderNewTask = () => {
-    toggleClasses()
+  const addTask = () => {
     todoListElement.innerHTML = ''
-    for (let todoValue of todosArr) {
-      todoListElement.insertAdjacentHTML('beforeend', `
-      <li class="todo__item todo-item" data-js-todo-task-item>
-                      <input class="todo-item__checkbox" type="checkbox" />
-                      <span class="todo-item__label" data-js-todo-task-label>${todoValue}</span>
+    toggleStateClasses()
+    for (let task of tasksArr) {
+      todoListElement.insertAdjacentHTML('beforeend', `  <li class="todo__item todo-item" data-js-todo-task-item>
+                      <input class="todo-item__checkbox" ${task.isCompleted ? 'checked' : ''} id="${task.id}" type="checkbox" data-js-todo-checkbox />
+                      <label class="todo-item__label" for="${task.id}" data-js-todo-task-label>${task.text}</label>
                       <button class="todo-item__button todo-item__button--edit" data-js-todo-edit-button>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path
@@ -88,46 +98,111 @@ export const initTodo = () => {
                           />
                         </svg>
                       </button>
-                    </li>
-    `)
+                    </li>`)
     }
   }
 
   const removeTask = () => {
     todoListElement.addEventListener('click', (e) => {
-      const currentRemoveButtonElement = e.target.closest('[data-js-todo-remove-button]')
+      const currentRemoveButtonElement = e.target.closest(selectors.removeButton)
       if (!currentRemoveButtonElement) return
-      const currentTaskElement = currentRemoveButtonElement.closest('[data-js-todo-task-item]')
-      const currentTextTaskLabel = currentTaskElement.querySelector('[data-js-todo-task-label]').textContent
+      const currentTaskElement = currentRemoveButtonElement.closest(selectors.taskItem)
+      const currentCheckBoxElement = currentTaskElement.querySelector(selectors.taskCheckbox)
 
-      const idTask = getIdTask(currentTextTaskLabel)
-
-      todosArr.forEach((todo, index) => {
-        if (index === idTask) {
-          todosArr.splice(index, 1)
-          setItemLocalStorage(todosArr)
-        }
-      });
-      currentTaskElement.remove()
-      toggleClasses()
+      tasksArr = tasksArr.filter((task) => task.id !== currentCheckBoxElement.id)
+      setItemLocalStorage(tasksArr)
+      addTask()
     })
   }
 
+  const editTask = () => {
+    todoListElement.addEventListener('click', (e) => {
+      const currentCheckboxElement = e.target.closest(selectors.taskCheckbox)
+      const currentEditButtonElement = e.target.closest(selectors.editButton)
+      if (currentCheckboxElement) {
+        toggleCheckbox(currentCheckboxElement)
+      } else if (currentEditButtonElement) {
+        editTaskLabel(currentEditButtonElement)
+      } else {
+        return
+      }
 
-  const toggleClasses = () => {
-    if (todosArr.length !== 0) {
-      todoEmptyElement.classList.add(stateClasses.isVisible)
-      todoFilterElement.classList.remove(stateClasses.isVisible)
+    })
+  }
+
+  const toggleCheckbox = (currentCheckboxElement) => {
+    tasksArr = tasksArr.map((task) => {
+      if (task.id === currentCheckboxElement.id) {
+        task.isCompleted = currentCheckboxElement.checked
+      }
+      return task
+    })
+    setItemLocalStorage(tasksArr)
+    addTask()
+  }
+
+  let labelText = null
+
+  const editTaskLabel = (currentEditButtonElement) => {
+    const currentTaskElement = currentEditButtonElement.closest(selectors.taskItem)
+    const currentTaskLabelElement = currentTaskElement.querySelector(selectors.taskLabel)
+    const currentCheckboxElement = currentTaskElement.querySelector(selectors.taskCheckbox)
+    const currentInputTaskElement = currentTaskElement.querySelector(selectors.taskInput)
+
+    const setValueLabelTask = (inputElement) => {
+      const inputValueTask = inputElement.value
+      tasksArr = tasksArr.map((task) => {
+        if (task.id === currentCheckboxElement.id) {
+          task.text = inputValueTask
+        }
+        return task
+      })
+      currentTaskLabelElement.innerHTML = inputValueTask
+      setItemLocalStorage(tasksArr)
+      addTask()
+    }
+
+    if (currentInputTaskElement) {
+      setValueLabelTask(currentInputTaskElement)
     } else {
-      todoEmptyElement.classList.remove(stateClasses.isVisible)
-      todoFilterElement.classList.add(stateClasses.isVisible)
+      const activeInputTask = todoListElement.querySelector(selectors.taskInput)
+
+      if (!labelText) {
+        labelText = currentTaskLabelElement.textContent
+      }
+
+
+      if (activeInputTask) {
+        const labelTask = activeInputTask.closest(selectors.taskLabel)
+        labelTask.innerHTML = labelText
+        labelText = null
+      }
+
+      const inputTaskElement = `<input class="todo-item__input" type="text" data-js-todo-task-input value="${currentTaskLabelElement.textContent}" />`
+      currentTaskLabelElement.innerHTML = inputTaskElement
+      const currentInputTask = currentTaskElement.querySelector(selectors.taskInput)
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          setValueLabelTask(currentInputTask)
+        }
+      })
+      currentInputTask.focus()
+      currentInputTask.setSelectionRange(currentInputTask.value.length, currentInputTask.value.length)
     }
   }
 
-  const getIdTask = (TextTaskLabel) => {
-    return todosArr.findIndex((todo) => todo === TextTaskLabel)
+  const toggleStateClasses = () => {
+    if (tasksArr.length !== 0) {
+      emptyScreenElement.classList.remove(stateClasses.isVisible)
+      filterElement.classList.add(stateClasses.isVisible)
+    } else {
+      emptyScreenElement.classList.add(stateClasses.isVisible)
+      filterElement.classList.remove(stateClasses.isVisible)
+    }
   }
 
+  editTask()
   removeTask()
-  renderNewTask()
+  addTask()
+  toggleStateClasses()
 }
