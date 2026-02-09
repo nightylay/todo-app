@@ -83,3 +83,12 @@
   margin-top: 160px;
   margin-left: -115px;
 }
+
+.todo__error {
+  text-align: center;
+  font-size: 30px;
+  color: var(--color-grey-1);
+  &:not(.is-visible) {
+    display: none;
+  }
+}
