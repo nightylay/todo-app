@@ -16,7 +16,7 @@ export const initTodo = () => {
     removeButton: '[data-js-todo-remove-button]',
     errorMessage: '[data-js-todo-error-message]',
     filterButton: '[data-js-todo-filter-button]',
-    countCompletedTasks: '[data-js-count-completed-tasks]'
+    countUncompletedTasks: '[data-js-count-uncompleted-tasks]'
   }
 
   const stateClasses = {
@@ -31,10 +31,9 @@ export const initTodo = () => {
   const todoListElement = document.querySelector(selectors.todoList)
   const emptyScreenElement = document.querySelector(selectors.emptyScreen)
   const errorMessageElement = document.querySelector(selectors.errorMessage)
-  const countCompletedTasks = document.querySelector(selectors.countCompletedTasks)
+  const countUncompletedTasksElement = document.querySelector(selectors.countUncompletedTasks)
 
   let tasksArr = getItemLocalStorage() || []
-  let filteredTasksArr = []
 
   createTaskFormElement.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -47,16 +46,13 @@ export const initTodo = () => {
       }
       tasksArr.push(taskItem)
       setItemLocalStorage(tasksArr)
-
-      applyActiveFilter()
-
+      applyFilteredTasks()
       createTaskInputElement.value = ''
     }
   })
 
   const addTask = (todoArr) => {
     todoListElement.innerHTML = ''
-    toggleStateClasses()
     for (let task of todoArr) {
       todoListElement.insertAdjacentHTML('beforeend', `  <li class="todo__item todo-item" data-js-todo-task-item>
                       <input class="todo-item__checkbox" ${task.isCompleted ? 'checked' : ''} id="${task.id}" type="checkbox" data-js-todo-checkbox />
@@ -117,9 +113,7 @@ export const initTodo = () => {
 
       tasksArr = tasksArr.filter((task) => task.id !== currentCheckBoxElement.id)
       setItemLocalStorage(tasksArr)
-      updateTasksCounter()
-      applyActiveFilter()
-
+      applyFilteredTasks()
     })
   }
 
@@ -144,6 +138,7 @@ export const initTodo = () => {
 
       const setValueLabelTask = (inputElement) => {
         const inputValueTask = inputElement.value
+        console.log(currentCheckboxElement.id)
         tasksArr = tasksArr.map((task) => {
           if (task.id === currentCheckboxElement.id) {
             task.text = inputValueTask
@@ -152,7 +147,7 @@ export const initTodo = () => {
         })
         currentTaskLabelElement.innerHTML = inputValueTask
         setItemLocalStorage(tasksArr)
-        applyActiveFilter()
+        applyFilteredTasks()
       }
 
       const cancelEditingTask = () => {
@@ -179,12 +174,14 @@ export const initTodo = () => {
         currentInputTask.focus()
         currentInputTask.setSelectionRange(currentInputTask.value.length, currentInputTask.value.length)
 
-        todoListElement.addEventListener('keydown', (e) => {
-          if (e.target !== currentInputTask) return
-          if (e.key === 'Enter') {
-            setValueLabelTask(currentInputTask)
+        const handleKeydown = (e) => {
+          if (e.key === 'Enter' && !e.target.matches(selectors.taskInput)) {
+            const currentInput = e.target
+            setValueLabelTask(currentInput)
+            todoListElement.removeEventListener('keydown', handleKeydown)
           }
-        })
+        }
+        todoListElement.addEventListener('keydown', handleKeydown)
       }
     }
   }
@@ -197,23 +194,16 @@ export const initTodo = () => {
       return task
     })
     setItemLocalStorage(tasksArr)
-    applyActiveFilter()
-    updateTasksCounter()
+    applyFilteredTasks()
   }
 
   const searchTask = () => {
     searchInputElement.addEventListener('input', () => {
-      applyActiveFilter()
-      if (filteredTasksArr.length !== 0) {
-        errorMessageElement.classList.remove(stateClasses.isVisible)
-      } else if (filteredTasksArr.length === 0 && tasksArr.length !== 0) {
-        todoListElement.innerHTML = ''
-        errorMessageElement.classList.add(stateClasses.isVisible)
-      }
+      applyFilteredTasks()
     })
   }
 
-  const filterTasks = () => {
+  const handleFilterTasks = () => {
     filterElement.addEventListener('click', (e) => {
       const filterButton = e.target.closest(selectors.filterButton)
       if (!filterButton) return
@@ -225,58 +215,42 @@ export const initTodo = () => {
 
       filterButton.classList.add(stateClasses.isActive)
 
-      const filterType = filterButton.dataset.jsFilter
-      filterTasksArray()
-
-      switch (filterType) {
-        case 'all':
-          filteredTasksArr = tasksArr
-          break;
-        case 'active':
-          if (searchInputElement.value.trim()) {
-            filteredTasksArr = filteredTasksArr.filter((task) => !task.isCompleted)
-          } else {
-            filteredTasksArr = tasksArr.filter((task) => !task.isCompleted)
-          }
-          break;
-        case 'completed':
-          if (searchInputElement.value.trim()) {
-            filteredTasksArr = filteredTasksArr.filter((task) => task.isCompleted)
-          } else {
-            filteredTasksArr = tasksArr.filter((task) => task.isCompleted)
-          }
-          break;
-        default:
-          filteredTasksArr = tasksArr
-          break;
-      }
-
-      addTask(filteredTasksArr)
-
+      applyFilteredTasks()
     })
   }
 
-  const filterTasksArray = () => {
+  const getTasksBySearch = () => {
     const searchInputValue = searchInputElement.value.trim().toLowerCase()
-    filteredTasksArr = tasksArr.filter((task) => task.text.toLowerCase().includes(searchInputValue))
+    return searchInputValue ? tasksArr.filter((task) => task.text.toLowerCase().includes(searchInputValue)) : tasksArr
   }
 
-  const applyActiveFilter = () => {
-    filterTasksArray()
-    const filterButtons = filterElement.querySelectorAll(selectors.filterButton)
-    filterButtons.forEach((button) => {
-      if (button.dataset.jsFilter === "all" && button.classList.contains('is-active')) {
-        addTask(filteredTasksArr)
-      }
-      if (button.dataset.jsFilter === "active" && button.classList.contains('is-active')) {
-        filteredTasksArr = filteredTasksArr.filter((task) => !task.isCompleted)
-        addTask(filteredTasksArr)
-      }
-      if (button.dataset.jsFilter === "completed" && button.classList.contains('is-active')) {
-        filteredTasksArr = filteredTasksArr.filter((task) => task.isCompleted)
-        addTask(filteredTasksArr)
-      }
-    })
+  const getTasksByFilter = (tasks, activeFilterType) => {
+    switch (activeFilterType) {
+      case 'active':
+        return tasks.filter((task) => !task.isCompleted)
+      case 'completed':
+        return tasks.filter((task) => task.isCompleted)
+      case 'all':
+      default:
+        return tasks
+    }
+  }
+
+  const applyFilteredTasks = () => {
+    const activeFilterType = filterElement.querySelector('.todo__filter-button.is-active').dataset.jsFilter || 'all'
+
+    const searchTasksArr = getTasksBySearch()
+    const filteredTasksArr = getTasksByFilter(searchTasksArr, activeFilterType)
+
+    if (searchInputElement.value.trim() && filteredTasksArr.length === 0 && tasksArr.length !== 0) {
+      errorMessageElement.classList.add(stateClasses.isVisible)
+    } else {
+      errorMessageElement.classList.remove(stateClasses.isVisible)
+    }
+
+    addTask(filteredTasksArr)
+    updateTasksCounter()
+    toggleStateClasses()
   }
 
   const toggleStateClasses = () => {
@@ -290,13 +264,12 @@ export const initTodo = () => {
   }
 
   const updateTasksCounter = () => {
-    const completedTasks = tasksArr.filter((task) => !task.isCompleted).length
-    countCompletedTasks.textContent = `${completedTasks} tasks left`
+    const uncompletedTasks = tasksArr.filter((task) => !task.isCompleted).length
+    countUncompletedTasksElement.textContent = `${uncompletedTasks} tasks left`
   }
 
-
   updateTasksCounter()
-  filterTasks()
+  handleFilterTasks()
   editTask()
   removeTask()
   addTask(tasksArr)
