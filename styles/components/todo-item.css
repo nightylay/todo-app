@@ -44,8 +44,7 @@
   }
 }
 
-.todo-item__label,
-.todo-item__input {
+.todo-item__label {
   margin: 0 auto 0 30px;
 }
 

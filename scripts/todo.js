@@ -183,52 +183,6 @@ export const initTodo = () => {
     }
   }
 
-  // const editTaskLabel = (currentEditButtonElement) => {
-  //   const currentTaskElement = currentEditButtonElement.closest(selectors.taskItem)
-  //   const currentTaskLabelElement = currentTaskElement.querySelector(selectors.taskLabel)
-  //   const currentCheckboxElement = currentTaskElement.querySelector(selectors.taskCheckbox)
-  //   const currentInputTaskElement = currentTaskElement.querySelector(selectors.taskInput)
-
-  //   const setValueLabelTask = (inputElement) => {
-  //     const inputValueTask = inputElement.value
-  //     console.log(currentCheckboxElement.id)
-  //     tasksArr = tasksArr.map((task) => {
-  //       if (task.id === currentCheckboxElement.id) {
-  //         task.text = inputValueTask
-  //       }
-  //       return task
-  //     })
-  //     currentTaskLabelElement.innerHTML = inputValueTask
-  //     setItemLocalStorage(tasksArr)
-  //     applyFilteredTasks()
-  //   }
-
-  //   const cancelEditingTask = () => {
-  //     const currentEditingInput = todoListElement.querySelector(selectors.taskInput)
-
-  //     if (currentEditingInput) {
-  //       const currentEditingTask = currentEditingInput.closest(selectors.taskItem)
-  //       const currentEditionLabel = currentEditingInput.closest(selectors.taskLabel)
-  //       const currentTaskId = currentEditingTask.querySelector(selectors.taskCheckbox).id
-
-  //       const originalTask = tasksArr.find((task) => currentTaskId === task.id)
-  //       currentEditionLabel.innerHTML = originalTask.text
-  //     }
-  //   }
-
-  //   if (currentInputTaskElement) {
-  //     setValueLabelTask(currentInputTaskElement)
-  //   } else {
-  //     cancelEditingTask()
-
-  //     const inputTaskElement = `<input class="todo-item__input" type="text" data-js-todo-task-input value="${currentTaskLabelElement.textContent}" />`
-  //     currentTaskLabelElement.innerHTML = inputTaskElement
-  //     const currentInputTask = currentTaskElement.querySelector(selectors.taskInput)
-  //     currentInputTask.focus()
-  //     currentInputTask.setSelectionRange(currentInputTask.value.length, currentInputTask.value.length)
-  //   }
-  // }
-
   const toggleCheckbox = (currentCheckboxElement) => {
     tasksArr = tasksArr.map((task) => {
       if (task.id === currentCheckboxElement.id) {
@@ -239,9 +193,6 @@ export const initTodo = () => {
     setItemLocalStorage(tasksArr)
     applyFilteredTasks()
   }
-
-
-
 
   const searchTask = () => {
     searchInputElement.addEventListener('input', () => {
