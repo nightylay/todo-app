@@ -159,6 +159,9 @@ export const initTodo = () => {
       cancelEditingTask()
       const inputTaskElement = `<input class="todo-item__input" type="text" data-js-todo-task-input value="${currentTaskLabelElement.textContent}" />`
       currentTaskLabelElement.innerHTML = inputTaskElement
+      const currentInputTask = currentTaskElement.querySelector(selectors.taskInput)
+      currentInputTask.focus()
+      currentInputTask.setSelectionRange(currentInputTask.value.length, currentInputTask.value.length)
     }
   }
 
@@ -172,7 +175,7 @@ export const initTodo = () => {
     if (valueTaskInput) {
       tasksArr = tasksArr.map((task) => {
         if (task.id === currentCheckboxElement.id) {
-          task.text = valueTaskInput
+          return { ...task, text: valueTaskInput }
         }
         return task
       })
