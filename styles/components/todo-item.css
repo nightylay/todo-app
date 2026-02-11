@@ -44,10 +44,14 @@
   }
 }
 
+.todo-item__label,
+.todo-item__input {
+  margin: 0 auto 0 30px;
+}
+
 .todo-item__label {
   font-size: var(--font-size-24);
   color: var(--color-dark-alt);
-  margin: 0 auto 0 30px;
   padding-right: 60px;
 }
 

@@ -124,67 +124,110 @@ export const initTodo = () => {
       if (currentCheckboxElement) {
         toggleCheckbox(currentCheckboxElement)
       } else if (currentEditButtonElement) {
-        editTaskLabel(currentEditButtonElement)
-      } else {
-        return
+        startEditingTask(currentEditButtonElement)
       }
     })
 
-    const editTaskLabel = (currentEditButtonElement) => {
-      const currentTaskElement = currentEditButtonElement.closest(selectors.taskItem)
-      const currentTaskLabelElement = currentTaskElement.querySelector(selectors.taskLabel)
-      const currentCheckboxElement = currentTaskElement.querySelector(selectors.taskCheckbox)
-      const currentInputTaskElement = currentTaskElement.querySelector(selectors.taskInput)
-
-      const setValueLabelTask = (inputElement) => {
-        const inputValueTask = inputElement.value
-        console.log(currentCheckboxElement.id)
-        tasksArr = tasksArr.map((task) => {
-          if (task.id === currentCheckboxElement.id) {
-            task.text = inputValueTask
-          }
-          return task
-        })
-        currentTaskLabelElement.innerHTML = inputValueTask
-        setItemLocalStorage(tasksArr)
-        applyFilteredTasks()
+    todoListElement.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.target.matches(selectors.taskInput)) {
+        const currentInput = e.target
+        finishEditingTask(currentInput)
       }
+    })
+  }
 
-      const cancelEditingTask = () => {
-        const currentEditingInput = todoListElement.querySelector(selectors.taskInput)
+  const cancelEditingTask = () => {
+    const currentEditingInput = todoListElement.querySelector(selectors.taskInput)
+    if (!currentEditingInput) return
 
-        if (currentEditingInput) {
-          const currentEditingTask = currentEditingInput.closest(selectors.taskItem)
-          const currentEditionLabel = currentEditingInput.closest(selectors.taskLabel)
-          const currentTaskId = currentEditingTask.querySelector(selectors.taskCheckbox).id
+    const currentEditingTask = currentEditingInput.closest(selectors.taskItem)
+    const currentEditingLabel = currentEditingInput.closest(selectors.taskLabel)
+    const currentTaskId = currentEditingTask.querySelector(selectors.taskCheckbox).id
+    const originalTask = tasksArr.find((task) => currentTaskId === task.id)
+    currentEditingLabel.innerHTML = originalTask.text
+  }
 
-          const originalTask = tasksArr.find((task) => currentTaskId === task.id)
-          currentEditionLabel.innerHTML = originalTask.text
-        }
-      }
+  const startEditingTask = (currentEditButtonElement) => {
+    const currentTaskElement = currentEditButtonElement.closest(selectors.taskItem)
+    const currentTaskLabelElement = currentTaskElement.querySelector(selectors.taskLabel)
+    const currentInputTaskElement = currentTaskElement.querySelector(selectors.taskInput)
 
-      if (currentInputTaskElement) {
-        setValueLabelTask(currentInputTaskElement)
-      } else {
-        cancelEditingTask()
-
-        const inputTaskElement = `<input class="todo-item__input" type="text" data-js-todo-task-input value="${currentTaskLabelElement.textContent}" />`
-        currentTaskLabelElement.innerHTML = inputTaskElement
-        const currentInputTask = currentTaskElement.querySelector(selectors.taskInput)
-        currentInputTask.focus()
-        currentInputTask.setSelectionRange(currentInputTask.value.length, currentInputTask.value.length)
-
-        const handleKeydown = (e) => {
-          if (e.key === 'Enter' && !e.target.matches(selectors.taskInput)) {
-            const currentInput = e.target
-            setValueLabelTask(currentInput)
-            todoListElement.removeEventListener('keydown', handleKeydown)
-          }
-        }
-        todoListElement.addEventListener('keydown', handleKeydown)
-      }
+    if (currentInputTaskElement) {
+      finishEditingTask(currentInputTaskElement)
+      return
+    } else {
+      cancelEditingTask()
+      const inputTaskElement = `<input class="todo-item__input" type="text" data-js-todo-task-input value="${currentTaskLabelElement.textContent}" />`
+      currentTaskLabelElement.innerHTML = inputTaskElement
     }
   }
+
+  const finishEditingTask = (currentInputTaskElement) => {
+    const currentTaskElement = currentInputTaskElement.closest(selectors.taskItem)
+    const currentCheckboxElement = currentTaskElement.querySelector(selectors.taskCheckbox)
+    const currentTaskLabelElement = currentTaskElement.querySelector(selectors.taskLabel)
+
+    const valueTaskInput = currentInputTaskElement.value.trim()
+
+    if (valueTaskInput) {
+      tasksArr = tasksArr.map((task) => {
+        if (task.id === currentCheckboxElement.id) {
+          task.text = valueTaskInput
+        }
+        return task
+      })
+
+      currentTaskLabelElement.innerHTML = valueTaskInput
+      setItemLocalStorage(tasksArr)
+      applyFilteredTasks()
+    }
+  }
+
+  // const editTaskLabel = (currentEditButtonElement) => {
+  //   const currentTaskElement = currentEditButtonElement.closest(selectors.taskItem)
+  //   const currentTaskLabelElement = currentTaskElement.querySelector(selectors.taskLabel)
+  //   const currentCheckboxElement = currentTaskElement.querySelector(selectors.taskCheckbox)
+  //   const currentInputTaskElement = currentTaskElement.querySelector(selectors.taskInput)
+
+  //   const setValueLabelTask = (inputElement) => {
+  //     const inputValueTask = inputElement.value
+  //     console.log(currentCheckboxElement.id)
+  //     tasksArr = tasksArr.map((task) => {
+  //       if (task.id === currentCheckboxElement.id) {
+  //         task.text = inputValueTask
+  //       }
+  //       return task
+  //     })
+  //     currentTaskLabelElement.innerHTML = inputValueTask
+  //     setItemLocalStorage(tasksArr)
+  //     applyFilteredTasks()
+  //   }
+
+  //   const cancelEditingTask = () => {
+  //     const currentEditingInput = todoListElement.querySelector(selectors.taskInput)
+
+  //     if (currentEditingInput) {
+  //       const currentEditingTask = currentEditingInput.closest(selectors.taskItem)
+  //       const currentEditionLabel = currentEditingInput.closest(selectors.taskLabel)
+  //       const currentTaskId = currentEditingTask.querySelector(selectors.taskCheckbox).id
+
+  //       const originalTask = tasksArr.find((task) => currentTaskId === task.id)
+  //       currentEditionLabel.innerHTML = originalTask.text
+  //     }
+  //   }
+
+  //   if (currentInputTaskElement) {
+  //     setValueLabelTask(currentInputTaskElement)
+  //   } else {
+  //     cancelEditingTask()
+
+  //     const inputTaskElement = `<input class="todo-item__input" type="text" data-js-todo-task-input value="${currentTaskLabelElement.textContent}" />`
+  //     currentTaskLabelElement.innerHTML = inputTaskElement
+  //     const currentInputTask = currentTaskElement.querySelector(selectors.taskInput)
+  //     currentInputTask.focus()
+  //     currentInputTask.setSelectionRange(currentInputTask.value.length, currentInputTask.value.length)
+  //   }
+  // }
 
   const toggleCheckbox = (currentCheckboxElement) => {
     tasksArr = tasksArr.map((task) => {
@@ -196,6 +239,9 @@ export const initTodo = () => {
     setItemLocalStorage(tasksArr)
     applyFilteredTasks()
   }
+
+
+
 
   const searchTask = () => {
     searchInputElement.addEventListener('input', () => {
