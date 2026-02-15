@@ -54,9 +54,9 @@ export const initTodo = () => {
   const addTask = (todoArr) => {
     todoListElement.innerHTML = ''
     for (let task of todoArr) {
-      todoListElement.insertAdjacentHTML('beforeend', `  <li class="todo__item todo-item" data-js-todo-task-item>
-                      <input class="todo-item__checkbox" ${task.isCompleted ? 'checked' : ''} id="${task.id}" type="checkbox" data-js-todo-checkbox />
-                      <label class="todo-item__label" for="${task.id}" data-js-todo-task-label>${task.text}</label>
+      todoListElement.insertAdjacentHTML('beforeend', `  <li class="todo__item todo-item" data-js-todo-task-item data-js-task-id="${task.id}">
+                      <input class="todo-item__checkbox" ${task.isCompleted ? 'checked' : ''} type="checkbox" data-js-todo-checkbox />
+                      <label class="todo-item__label" data-js-todo-task-label>${task.text}</label>
                       <button class="todo-item__button todo-item__button--edit" data-js-todo-edit-button>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path
@@ -108,84 +108,94 @@ export const initTodo = () => {
     todoListElement.addEventListener('click', (e) => {
       const currentRemoveButtonElement = e.target.closest(selectors.removeButton)
       if (!currentRemoveButtonElement) return
-      const currentTaskElement = currentRemoveButtonElement.closest(selectors.taskItem)
-      const currentCheckBoxElement = currentTaskElement.querySelector(selectors.taskCheckbox)
-
-      tasksArr = tasksArr.filter((task) => task.id !== currentCheckBoxElement.id)
+      const currentTaskId = currentRemoveButtonElement.closest(selectors.taskItem).dataset.jsTaskId
+      tasksArr = tasksArr.filter((task) => task.id !== currentTaskId)
       setItemLocalStorage(tasksArr)
       applyFilteredTasks()
     })
   }
 
   const editTask = () => {
+    let wasCanceled = false
+    let currentlyEditingTaskId = null;
+
     todoListElement.addEventListener('click', (e) => {
       const currentCheckboxElement = e.target.closest(selectors.taskCheckbox)
       const currentEditButtonElement = e.target.closest(selectors.editButton)
+
       if (currentCheckboxElement) {
         toggleCheckbox(currentCheckboxElement)
       } else if (currentEditButtonElement) {
-        const currentEditingTask = currentEditButtonElement.closest(selectors.taskItem)
-        const currentEditingInput = currentEditingTask.querySelector(selectors.taskInput)
+        const anyEditingInput = todoListElement.querySelector(selectors.taskInput)
+        const taskId = currentEditButtonElement.closest(selectors.taskItem).dataset.jsTaskId
 
-        if (currentEditingInput) {
-          finishEditingTask(currentEditingInput)
+        if (anyEditingInput) {
+          const isSameTask = (currentlyEditingTaskId === taskId);
+          finishEditingTask(anyEditingInput)
+
+          if (!isSameTask) {
+            setTimeout(() => {
+              const newEditButton = document.querySelector(`[data-js-task-id="${taskId}"]`)?.querySelector(selectors.editButton)
+
+              if (newEditButton) {
+                startEditingTask(newEditButton);
+              }
+            }, 0);
+          }
+
         } else {
           startEditingTask(currentEditButtonElement)
         }
-
       }
     })
 
     todoListElement.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && e.target.matches(selectors.taskInput)) {
-        const currentInput = e.target
-        finishEditingTask(currentInput)
+        finishEditingTask(e.target)
+      } else if (e.key === 'Escape' && e.target.matches(selectors.taskInput)) {
+        wasCanceled = true
+        cancelEditingTask()
       }
     })
 
     // document.body.addEventListener('focusout', (e) => {
+    //   console.log('focusout событие')
     //   if (e.target.matches(selectors.taskInput)) {
-    //     const currentInput = e.target
-    //     console.log(currentInput)
-    //     finishEditingTask(currentInput)
+    //     if (!wasCanceled) {
+    //       finishEditingTask(e.target)
+    //       wasCanceled = false
+    //     }
+    //   } else {
+    //     console.log('focusout - Изменения не сохраняются!')
     //   }
     // })
 
     const cancelEditingTask = () => {
-      const currentEditingInput = todoListElement.querySelector(selectors.taskInput)
-
-      if (!currentEditingInput) return
-
-      const currentEditingTask = currentEditingInput.closest(selectors.taskItem)
-      const currentEditingLabel = currentEditingInput.closest(selectors.taskLabel)
-      const currentTaskId = currentEditingTask.querySelector(selectors.taskCheckbox).id
-      const originalTask = tasksArr.find((task) => currentTaskId === task.id)
-      currentEditingLabel.innerHTML = originalTask.text
+      currentlyEditingTaskId = null
+      applyFilteredTasks()
     }
 
     const startEditingTask = (currentEditButtonElement) => {
       const currentTaskElement = currentEditButtonElement.closest(selectors.taskItem)
+      currentlyEditingTaskId = currentTaskElement.dataset.jsTaskId
       const currentTaskLabelElement = currentTaskElement.querySelector(selectors.taskLabel)
-
-      cancelEditingTask()
       const inputTaskElement = `<input class="todo-item__input" type="text" data-js-todo-task-input value="${currentTaskLabelElement.textContent}" />`
       currentTaskLabelElement.innerHTML = inputTaskElement
       const currentInputTask = currentTaskElement.querySelector(selectors.taskInput)
       currentInputTask.focus()
       currentInputTask.setSelectionRange(currentInputTask.value.length, currentInputTask.value.length)
-
     }
 
     const finishEditingTask = (currentInputTaskElement) => {
       const currentTaskElement = currentInputTaskElement.closest(selectors.taskItem)
-      const currentCheckboxElement = currentTaskElement.querySelector(selectors.taskCheckbox)
+      const currentTaskId = currentTaskElement.dataset.jsTaskId
       const currentTaskLabelElement = currentTaskElement.querySelector(selectors.taskLabel)
 
       const valueTaskInput = currentInputTaskElement.value.trim()
 
       if (valueTaskInput) {
         tasksArr = tasksArr.map((task) => {
-          if (task.id === currentCheckboxElement.id) {
+          if (task.id === currentTaskId) {
             return { ...task, text: valueTaskInput }
           }
           return task
@@ -193,16 +203,16 @@ export const initTodo = () => {
 
         currentTaskLabelElement.textContent = valueTaskInput
         setItemLocalStorage(tasksArr)
-        applyFilteredTasks()
       }
+      applyFilteredTasks()
+      currentlyEditingTaskId = null
     }
   }
 
-
-
   const toggleCheckbox = (currentCheckboxElement) => {
+    const taskId = currentCheckboxElement.closest(selectors.taskItem).dataset.jsTaskId
     tasksArr = tasksArr.map((task) => {
-      if (task.id === currentCheckboxElement.id) {
+      if (task.id === taskId) {
         task.isCompleted = currentCheckboxElement.checked
       }
       return task
