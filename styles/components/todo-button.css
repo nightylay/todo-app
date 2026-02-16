@@ -14,4 +14,9 @@
     background-color: var(--color-dark-alt);
     transition: var(--transition-duration) ease;
   }
+
+  @media (max-width: 480px) {
+    order: 1;
+    justify-content: center;
+  }
 }

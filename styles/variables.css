@@ -20,4 +20,7 @@
   --border-radius: 12px;
 
   --transition-duration: 0.2s;
+
+  --container-max-width: 690px;
+  --container-padding-x: 15px;
 }

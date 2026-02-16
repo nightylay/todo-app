@@ -2,10 +2,14 @@
   background-color: var(--color-white);
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
-  height: 84px;
+  min-height: 84px;
   padding: 28px 30px;
   display: flex;
   align-items: center;
+
+  @media (max-width: 480px) {
+    padding: 18px 20px;
+  }
 }
 
 .todo-item__checkbox {
@@ -17,6 +21,7 @@
   border: 2px solid var(--color-dark);
   border-radius: 4px;
   cursor: pointer;
+  flex-shrink: 0;
 
   &:checked {
     background-color: var(--color-dark);
@@ -46,12 +51,10 @@
 
 .todo-item__label {
   margin: 0 auto 0 30px;
-}
-
-.todo-item__label {
   font-size: var(--font-size-24);
   color: var(--color-dark-alt);
-  padding-right: 60px;
+  word-break: break-all;
+  padding-right: 30px;
 }
 
 .todo-item__button {
@@ -64,6 +67,10 @@
 
   &:not(:last-child) {
     margin-right: 30px;
+
+    @media (max-width: 480px) {
+      margin-right: 20px;
+    }
   }
 }
 
