@@ -10,6 +10,7 @@
   text-align: center;
   margin-bottom: 58px;
   font-size: 48px;
+  color: var(--color-text-primary);
 }
 
 .todo__actions {
@@ -41,7 +42,7 @@
 .todo__filter-button,
 .todo__filter-count {
   font-size: 20px;
-  color: var(--color-grey-1);
+  color: var(--color-text-secondary);
 }
 
 .todo__filter-button {
@@ -49,15 +50,15 @@
   border: none;
 
   &:hover {
-    color: var(--color-dark-alt);
+    color: var(--color-text-primary);
   }
 
   &.is-active {
-    color: var(--color-dark-alt);
+    color: var(--color-text-primary);
   }
 
   &:not(:last-child) {
-    border-right: 2px solid var(--color-grey-1);
+    border-right: 2px solid var(--color-text-secondary);
   }
 }
 
@@ -90,7 +91,7 @@
 .todo__error {
   text-align: center;
   font-size: 30px;
-  color: var(--color-grey-1);
+  color: var(--color-text-secondary);
   &:not(.is-visible) {
     display: none;
   }

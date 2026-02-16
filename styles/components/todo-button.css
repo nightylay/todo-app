@@ -1,22 +1,32 @@
 .todo__form-button {
   display: inline-flex;
+  justify-content: center;
+  align-items: center;
   column-gap: 6px;
-  color: var(--color-white);
-  background-color: var(--color-dark);
+  color: var(--accent-color-alternate);
+  background-color: var(--accent-color);
   font-size: var(--font-size-24);
-  padding: 15px 30px;
+  padding-inline: 30px;
   min-width: 143px;
+  min-height: var(--control-height);
   font-weight: 700;
   border: none;
   border-radius: var(--border-radius);
 
   &:hover {
-    background-color: var(--color-dark-alt);
-    transition: var(--transition-duration) ease;
+    background-color: var(--color-text-primary);
   }
 
   @media (max-width: 480px) {
     order: 1;
     justify-content: center;
+  }
+}
+
+body.dark-theme .todo__form-button {
+  background-color: var(--color-background-alternate);
+
+  &:hover {
+    background-color: var(--color-button-hover);
   }
 }

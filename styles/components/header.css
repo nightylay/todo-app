@@ -8,6 +8,6 @@
   border: none;
 
   &:hover path {
-    stroke: var(--color-grey-1);
+    stroke: var(--color-text-primary);
   }
 }

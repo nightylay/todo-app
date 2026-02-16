@@ -5,5 +5,5 @@
 .footer__text {
   text-align: center;
   font-size: var(--font-size-20);
-  color: var(--color-grey-1);
+  color: var(--color-text-secondary);
 }

@@ -9,7 +9,7 @@
 
 .field__input {
   width: 100%;
-  height: var(--input-height);
+  min-height: var(--control-height);
   font-size: var(--font-size-24);
   border-radius: var(--border-radius);
   padding-left: 26px;
@@ -20,7 +20,13 @@
     outline: 1px solid var(--color-dark-alt);
   }
 
-  &:placeholder {
-    color: var(--color-grey-2);
+  &::placeholder {
+    color: var(--color-text-placeholder);
   }
+}
+
+body.dark-theme .field__input {
+  background-color: var(--color-background-input);
+  border: 1px solid var(--color-background-alternate);
+  color: var(--color-text-primary);
 }

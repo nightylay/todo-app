@@ -1,5 +1,5 @@
 .todo-item {
-  background-color: var(--color-white);
+  background-color: var(--accent-color-alternate);
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
   min-height: 84px;
@@ -12,22 +12,26 @@
   }
 }
 
+body.dark-theme .todo-item {
+  background-color: var(--color-background-secondary);
+}
+
 .todo-item__checkbox {
   appearance: none;
   position: relative;
   width: 24px;
   height: 24px;
   margin: 0;
-  border: 2px solid var(--color-dark);
+  border: 2px solid var(--accent-color);
   border-radius: 4px;
   cursor: pointer;
   flex-shrink: 0;
 
   &:checked {
-    background-color: var(--color-dark);
+    background-color: var(--accent-color);
     & + .todo-item__label {
       text-decoration: line-through;
-      color: var(--color-grey-1);
+      color: var(--color-text-secondary);
     }
   }
 
@@ -49,10 +53,18 @@
   }
 }
 
+body.dark-theme .todo-item__checkbox {
+  border-color: var(--accent-color-alternate);
+
+  &:checked {
+    border-color: var(--accent-color);
+  }
+}
+
 .todo-item__label {
   margin: 0 auto 0 30px;
   font-size: var(--font-size-24);
-  color: var(--color-dark-alt);
+  color: var(--color-text-primary);
   word-break: break-all;
   padding-right: 30px;
 }
@@ -74,10 +86,16 @@
   }
 }
 
-.todo-item__button--edit:hover path {
-  stroke: var(--color-grey-1);
+body.dark-theme .todo-item__button path {
+  stroke: var(--accent-color-alternate);
 }
 
+body.dark-theme .todo-item__button--edit:hover path,
+.todo-item__button--edit:hover path {
+  stroke: var(--accent-color);
+}
+
+body.dark-theme .todo-item__button--delete:hover path,
 .todo-item__button--delete:hover path {
   stroke: #ce2e2e;
 }
