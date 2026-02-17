@@ -1,0 +1,8 @@
+.header-button {
+  background-color: unset;
+  border: none;
+
+  &:hover svg * {
+    stroke: var(--color-button-hover);
+  }
+}
