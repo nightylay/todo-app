@@ -9,6 +9,8 @@
   --accent-color-alternate: #fff;
   --color-background: #f3f4f6;
 
+  --color-button-hover: #757c88;
+
   --box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
 
   --control-height: 60px;
@@ -34,6 +36,4 @@
   --color-background-secondary: #1e2939;
   --color-background-alternate: #4a5565;
   --color-background-input: #364153;
-
-  --color-button-hover: #757c88;
 }

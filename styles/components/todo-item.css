@@ -92,7 +92,7 @@ body.dark-theme .todo-item__button path {
 
 body.dark-theme .todo-item__button--edit:hover path,
 .todo-item__button--edit:hover path {
-  stroke: var(--accent-color);
+  stroke: var(--color-button-hover);
 }
 
 body.dark-theme .todo-item__button--delete:hover path,
