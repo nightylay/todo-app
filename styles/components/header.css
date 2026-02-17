@@ -3,7 +3,7 @@
   text-align: right;
 
   @media (max-width: 730px) {
-    margin: 35px 10px 0;
+    margin: 35px10px 0;
   }
 }
 
@@ -12,6 +12,6 @@
   border: none;
 
   &:hover path {
-    stroke: var(--color-text-primary);
+    stroke: var(--color-button-hover);
   }
 }
