@@ -16,4 +16,7 @@ export const selectors = {
   countUncompletedTasks: '[data-js-count-uncompleted-tasks]',
 
   themeButton: '[data-js-button-switch-theme]',
+  infoButton: '[data-js-button-info]',
+
+  modalWindow: '[data-js-modal-window]'
 }

@@ -9,7 +9,7 @@
   font-weight: 700;
   text-align: center;
   margin-bottom: 58px;
-  font-size: 48px;
+  font-size: var(--font-size-48);
   color: var(--color-text-primary);
 }
 

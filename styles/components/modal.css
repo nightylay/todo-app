@@ -1,0 +1,25 @@
+.modal {
+  border: none;
+  border-radius: 15px;
+  box-shadow: var(--box-shadow);
+  padding: 50px;
+}
+
+.modal__title {
+  font-size: var(--font-size-48);
+  text-align: center;
+}
+
+.modal__info {
+  &:not(:last-child) {
+    margin-bottom: 30px;
+  }
+}
+
+.modal__info-item {
+  font-size: 18px;
+}
+
+.modal__info-item span {
+  font-weight: 700;
+}

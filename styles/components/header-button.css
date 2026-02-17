@@ -6,3 +6,12 @@
     stroke: var(--color-button-hover);
   }
 }
+
+body.dark-theme .header-button {
+  svg * {
+    stroke: var(--accent-color-alternate);
+  }
+  &:hover svg * {
+    stroke: var(--color-button-hover);
+  }
+}

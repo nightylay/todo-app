@@ -147,5 +147,58 @@
         <div class="footer__text">© 2026</div>
       </footer>
     </div>
+
+    <dialog class="modal" data-js-modal-window>
+      <h2 class="modal__title">How to use this Todo list</h2>
+      <div class="modal__body">
+        <div class="modal__info">
+          <h2 class="modal__info-label">Basic actions</h2>
+          <ul class="modal__info-list">
+            <li class="modal__info-item">
+              <span>Add a task:</span> Enter text in the field and press Enter or the "+ Add" button.
+            </li>
+            <li class="modal__info-item">
+              <span>Mark as completed:</span> Click the checkbox to the left of the task.
+            </li>
+            <li class="modal__info-item">
+              <span>Delete a task:</span> Click the trash can icon <img src="./assets/icons/todo/trash.svg" alt="" />.
+            </li>
+          </ul>
+        </div>
+        <div class="modal__info">
+          <h2 class="modal__info-label">Editing tasks</h2>
+          <ul class="modal__info-list">
+            <li class="modal__info-item">
+              <span>Edit a task:</span> Click the pencil icon <img src="./assets/icons/todo/pencil.svg" alt="" /> to
+              edit a task.
+            </li>
+            <li class="modal__info-item">
+              <span>Save changes:</span> To save changes, press Enter or the pencil icon
+              <img src="./assets/icons/todo/pencil.svg" alt="" />.
+            </li>
+            <li class="modal__info-item">
+              <span>You can switch between tasks:</span> Start editing one task, then click the pencil icon of
+              another—the first one will be saved automatically!
+            </li>
+          </ul>
+        </div>
+        <div class="modal__info">
+          <h2 class="modal__info-label">Search and filter</h2>
+          <ul class="modal__info-list">
+            <li class="modal__info-item">
+              <span>Find a task:</span> Enter text in the search field to find the task you need.
+            </li>
+            <li class="modal__info-item">
+              <span>Use filters:</span>
+              <ul>
+                <li>All: Show all tasks</li>
+                <li>Active: Show only uncompleted tasks</li>
+                <li>Completed: Show only completed tasks.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </dialog>
   </body>
 </html>
