@@ -86,6 +86,7 @@
   white-space: nowrap;
   margin-top: 160px;
   margin-left: -115px;
+  color: var(--color-text-primary);
 }
 
 .todo__error {

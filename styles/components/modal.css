@@ -1,4 +1,5 @@
 .modal {
+  position: relative;
   border: none;
   border-radius: 15px;
   box-shadow: var(--box-shadow);
@@ -22,4 +23,59 @@
 
 .modal__info-item span {
   font-weight: 700;
+}
+
+.close-button {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  border: none;
+  background: none;
+  padding: 20px 10px;
+}
+
+.close-button:hover .close-button__line {
+  background-color: var(--color-button-hover);
+}
+
+.close-button__line {
+  position: relative;
+  display: block;
+  width: 25px;
+  height: 2px;
+  background-color: var(--accent-color);
+
+  &:first-child {
+    transform: rotate(45deg);
+  }
+
+  &:last-child {
+    transform: rotate(-45deg) translate(1px, -2px);
+  }
+}
+
+.modal[open] {
+  animation: show 0.4s;
+}
+
+.modal.hide {
+  animation: hide 0.4s;
+}
+
+@keyframes show {
+  from {
+    transform: translateY(-15%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes hide {
+  to {
+    transform: translateY(-15%);
+    opacity: 0;
+  }
 }

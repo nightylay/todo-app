@@ -18,5 +18,6 @@ export const selectors = {
   themeButton: '[data-js-button-switch-theme]',
   infoButton: '[data-js-button-info]',
 
-  modalWindow: '[data-js-modal-window]'
+  modalWindow: '[data-js-modal]',
+  closeModalButton: '[data-js-modal-close-button]'
 }

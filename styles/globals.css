@@ -17,3 +17,7 @@ button {
 .main {
   flex: 1 1 auto;
 }
+
+.scroll-lock {
+  overflow: hidden;
+}
