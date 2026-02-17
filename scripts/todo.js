@@ -1,4 +1,4 @@
-import { setItemLocalStorage, getItemLocalStorage } from "./utils.js";
+import { STORAGE_KEYS, setItemLocalStorage, getItemLocalStorage } from "./utils.js";
 import { selectors } from "./selectors.js";
 
 export const initTodo = () => {
@@ -16,7 +16,7 @@ export const initTodo = () => {
   const errorMessageElement = document.querySelector(selectors.errorMessage)
   const countUncompletedTasksElement = document.querySelector(selectors.countUncompletedTasks)
 
-  let tasksArr = getItemLocalStorage() || []
+  let tasksArr = getItemLocalStorage(STORAGE_KEYS.TODOS) || []
 
   createTaskFormElement.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -28,7 +28,7 @@ export const initTodo = () => {
         isCompleted: false,
       }
       tasksArr.push(taskItem)
-      setItemLocalStorage(tasksArr)
+      setItemLocalStorage(STORAGE_KEYS.TODOS, tasksArr)
       applyFilteredTasks()
       createTaskInputElement.value = ''
     }
@@ -97,7 +97,7 @@ export const initTodo = () => {
       if (!currentRemoveButtonElement) return
       const currentTaskId = getIdTask(currentRemoveButtonElement)
       tasksArr = tasksArr.filter((task) => task.id !== currentTaskId)
-      setItemLocalStorage(tasksArr)
+      setItemLocalStorage(STORAGE_KEYS.TODOS, tasksArr)
       applyFilteredTasks()
     })
   }
@@ -169,7 +169,7 @@ export const initTodo = () => {
           return task
         })
 
-        setItemLocalStorage(tasksArr)
+        setItemLocalStorage(STORAGE_KEYS.TODOS, tasksArr)
       }
       applyFilteredTasks()
       currentlyEditingTaskId = null
@@ -184,7 +184,7 @@ export const initTodo = () => {
       }
       return task
     })
-    setItemLocalStorage(tasksArr)
+    setItemLocalStorage(STORAGE_KEYS.TODOS, tasksArr)
     applyFilteredTasks()
   }
 

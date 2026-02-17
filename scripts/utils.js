@@ -1,9 +1,12 @@
-const LOCAL_STORAGE_KEY = 'todos'
-
-export const setItemLocalStorage = (todosArr) => {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todosArr))
+export const STORAGE_KEYS = {
+  TODOS: 'todos',
+  THEME: 'theme'
 }
 
-export const getItemLocalStorage = () => {
-  return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
+export const setItemLocalStorage = (key, value) => {
+  localStorage.setItem(key, JSON.stringify(value))
+}
+
+export const getItemLocalStorage = (key) => {
+  return JSON.parse(localStorage.getItem(key))
 }
