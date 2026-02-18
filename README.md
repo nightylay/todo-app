@@ -9,7 +9,7 @@ This project is a classic Todo List. The app helps organize everyday tasks by al
 ## Possibilities
 
 - :pencil: Add, edit, and delete tasks
-- :white_check_mark: Mark completed tasks (checkboxes)
+- :white_check_mark: Mark completed tasks
 - :pencil2: Flexible editing:
   - Press Enter or the edit icon to save
   - Press Esc to cancel
