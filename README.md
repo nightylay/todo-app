@@ -31,4 +31,4 @@ This project is a classic Todo List. The app helps organize everyday tasks by al
 
 To run it, you only need to clone the repository and you can run the project.
 
-    git clone https://github.com/nightylay/todo-app.git
+    git clone https://github.com/nightylay/todo-list.git
