@@ -1,7 +1,7 @@
 .modal {
   position: relative;
   border: none;
-  border-radius: 15px;
+  border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   padding: 50px;
 }
@@ -18,7 +18,7 @@
 }
 
 .modal__info-item {
-  font-size: 18px;
+  font-size: var(--font-size-18);
 }
 
 .modal__info-item span {
